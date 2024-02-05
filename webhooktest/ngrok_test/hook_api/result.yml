@@ -1,0 +1,4593 @@
+openapi: 3.0.0
+info:
+  title: indefiti
+  description: Api документация продукта
+  version: 1.0.0
+servers:
+  - url: http://{{url}}
+  - url: https://api.prgms.io
+tags:
+  - name: Users
+    description: Методы работы с пользователем
+  - name: Sessions
+    description: Методы работы с сессией пользователя
+  - name: account
+    description: Методы работы с аккаунтом
+  - name: invoices
+    description: Методы работы с Invoice
+  - name: online_stores
+    description: Методы работы с проектом
+  - name: withdraw
+    description: Методы работы с выводами
+paths:
+  /api/v1/users:
+    post:
+      tags:
+        - Users
+      summary: CreateUser
+      description: >-
+        Создание пользователя
+
+
+        авторизация не нужна
+
+
+        email: email адрес пользователя, в дальнейшем используется как логин
+
+
+        password: пароль нового пользователя, в дальнейшем используется для
+        авторизации
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: somesomesome
+                password: somesomesome
+      responses:
+        '201':
+          description: Created
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 11:32:00 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '0'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: d4bd865d-49cd-4ae4-9590-5883ae61acb5
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: d4bd865d-49cd-4ae4-9590-5883ae61acb5
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=We794hhXH1z9yFq%2BoPYNpaZzuoqzQ%2B92RtJ1lYaSnDdauW4fF97re%2F7AkmmVf%2FN5ICj5QTfXg%2F3VaI8k3sGw9rdxqeaya4Dkp93so0p87VwE1J3pDsX1%2F6KCt6B1KSo%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 82905eaf7898664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example: {}
+        '422':
+          description: Unprocessable Entity
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 11:39:31 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '32'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 9bf34199-ad5b-48ad-bfc4-2b2246dd553d
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 9bf34199-ad5b-48ad-bfc4-2b2246dd553d
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=8JiIQWeWRLCmT3Fd1f%2FK%2FOyNrP%2FT5ajXPa1Qil6PqVC00xqf4ktqlZeCTAl7kTY8NDEqnp6XPFFLUOtTjSa1T0aBaqWWAuciSBMNs%2BuAYRJmRDgbwuoCcNsaC%2FeXO2Y%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 829069afcb37664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: CreateUser with email already exist
+                  value:
+                    error: Email is not unique
+                example-1:
+                  summary: CreateUser with empty fields
+                  value:
+                    error: Password is too short
+                example-2:
+                  summary: CreateUser not valid email
+                  value:
+                    error: Email is not valid
+  /api/v1/users/current:
+    get:
+      tags:
+        - Users
+      summary: GetCurrentUser
+      description: >-
+        Получение информации о текущем авторизованом пользователе
+
+
+        Требуется наличие активной сессии(пользователь авторизован через логин
+        пароль)
+
+
+        RESPONCE
+
+
+        ``` json
+
+        {    
+             "id": 204, 
+             "email": "Some3test@gmail.com"
+        }
+
+         ```
+      responses:
+        '200':
+          description: OK
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 11:33:33 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '41'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 22c89cbe-9a4d-493f-8e97-534e90fa1bce
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 22c89cbe-9a4d-493f-8e97-534e90fa1bce
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=r4XRpP5dufvH6IRQDyDswlmQDuSF2oOmaLR8xnzWJGmZIZyo%2FlPvHhT22Ii5KvNzAmPUEuYTWOtb6TYXCHV3TTjk2CEKyMXKM6Dd92rtoNNdcdzVdiNesTr%2FWKbORG0%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 829060f28be5664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: 204
+                email: Some3test@gmail.com
+        '401':
+          description: Unauthorized
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 11:42:25 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '25'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 446fd6b7-8af5-4889-9d98-66ce8e34d12b
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 446fd6b7-8af5-4889-9d98-66ce8e34d12b
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=de0CxS7XxQHhbaKHfnD837IHZj3YXF01UMH8mIhpKTBYlZKrBEgtIH64IZ1O7EHoaOC6kHFbva5ia9r8%2FEKG30ZkvWcVWOu6uajZ5gsG2nXfSrtyWfb%2F830f8o%2FwCc8%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 82906deefe78664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: Unauthorized
+  /api/v1/users/verification:
+    post:
+      tags:
+        - Users
+      summary: VerifyUser
+      description: |-
+        Верификация пользователя необходима для дальнейшей авторизации
+
+        После регистрации на почту приходит письмо с кодом верификации
+
+        verificationCode: Код который приходит в письме для верификации
+
+        авторизация не требуется
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                verificationCode: ey89eushtqegotq78rbrspnmixspjj16
+      responses:
+        '201':
+          description: Created
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 11:40:56 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '0'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: a1071487-92b9-457e-a63e-dc0e71044896
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: a1071487-92b9-457e-a63e-dc0e71044896
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=mc9rlAYyq42xNMAsZhTEkwyWMs4YCGw2UJcOM4779X6koZ5AzvKt1IaCrs1xgFNEG%2FasLKfdOp3GTpVBTbO1%2FXmXqSgwzEh95ur8mKEONgp6fq%2BW%2BYeVYyVK8%2FR2BjU%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 82906bc5cc77664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example: {}
+        '422':
+          description: Unprocessable Entity
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 11:41:03 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '34'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: a9794465-cfab-4e11-b716-7cd3aa6a410f
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: a9794465-cfab-4e11-b716-7cd3aa6a410f
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=HDeHXL7cLUHd8iL8gR7qKfguUr5hYHWIOYKguTtXy9TVpv%2BG5%2FpVEMA7zd2tFJl3oGFscgFuYNyl6gR%2Fcbliaa%2FaQ47wxSkI6jdgNxm4id4r8i0ezAN%2B6rYp0VVR9BU%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 82906bf25b6a664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: User has wrong status
+    put:
+      tags:
+        - Users
+      summary: ResetUserVerification
+      description: |-
+        Запрос на повторную отправку письма верификации
+
+        email: email пользователя при регистрации
+
+        авторизация не требуется
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: Some11test@gmail.com
+      responses:
+        '200':
+          description: OK
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 11:44:27 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '0'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: c7a65489-7fc0-4ff8-80d7-29501c9d18e0
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: c7a65489-7fc0-4ff8-80d7-29501c9d18e0
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=14x1e2qg0EcbztZu6ZD6M%2FCGWcxTolreAe1LpdlXuQspRwURZoAMMzI0aFfb9NELBjckMM6fu1p95RMrR7pltZSkJz%2FwKu1B7FrS8bSwJaZG7bnjtHSIu5Z0pMOFohI%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 829070eb5ae3664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example: {}
+  /api/v1/users/password_reset:
+    post:
+      tags:
+        - Users
+      summary: RequestResetUserPassword
+      description: >-
+        Запрос на смену пароля
+
+
+        email: email сущесутвющего пользователя для которого хотим сменить
+        пароль  
+
+        авторизация не требуется
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: Some10test@gmail.com
+      responses:
+        '201':
+          description: Created
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 11:47:10 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '0'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 45d03d97-ab09-4033-aa56-4adeddca6fd5
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 45d03d97-ab09-4033-aa56-4adeddca6fd5
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=3raPkE3Bk8hA66scevihJO1ZKy1df6PUr5M0rdeN5aXPNEo00WJbg2XNqS5xrxFC5y7lUb6p6D1lCwmhSwkduS2JmzznvP538zFI9M8CbFVgrOedEaNiBAPMzjodhCs%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 829074e55ab9664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example: {}
+        '404':
+          description: Not Found
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 11:47:24 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '27'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: d53a545f-0514-4f32-9ce1-7d0e0874f5f6
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: d53a545f-0514-4f32-9ce1-7d0e0874f5f6
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=srj1Vys6dMHroYZLewA2%2F7x21747b0bLRTfu28D3FrwxUWMXvYO5%2F%2B%2Bl1exNI5Hr4c9Y6xx18t%2Bio7fbnYB46JwI9lKPMvBZ6nS23fDafZNEncMJrl18wIJ0zP40Uoc%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 8290753d1e18664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: RequestResetUserPassword with user not exist
+                  value:
+                    error: User not found
+                example-1:
+                  summary: RequestResetUserPassword empty field
+                  value:
+                    error: User not found
+    put:
+      tags:
+        - Users
+      summary: ResetUserPassword
+      description: |-
+        Смена пароля
+
+        newPassword: Новый пароль пользователя, для авторизации
+
+        resetCode: Код приходит в письме после отправки запроса на смену пароля
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                newPassword: Some10test@gmail.com
+                resetCode: bd64n5r09owsfkg6964oc0c655zlqfr0
+      responses:
+        '200':
+          description: OK
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 11:48:40 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '0'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: d4a21ccb-f096-4666-a05b-239290d33762
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: d4a21ccb-f096-4666-a05b-239290d33762
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=jxRbwHctQgbDC0vvk6bCX4enxbetG9%2Fhmgb4fnC%2FE1roDOcW5cTaohRt5bd1bCsGHI3QQ%2B1aWizQ86jbspTj3ynngDC4ObsDXYF8IZ7U9nVB2CvSD%2BJlmvBTc%2Bq8l9E%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 829077196e7e664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example: {}
+        '422':
+          description: Unprocessable Entity
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 11:49:01 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '50'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 007b3600-8573-4cdf-8746-7f1c297d59ce
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 007b3600-8573-4cdf-8746-7f1c297d59ce
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=015nyMcRNfnbedSl31WsfHsYVmZUOe2mloS6I9o62AULjUzZ8TD%2F1uf9FYOAf8%2F6RqRMXsqaTMcLgnLnqDafXp3IcoZ17CJUEZoh3gFVZI5JmoM11DzD12PpuOWCWyE%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 8290779d0bac664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: ResetUserPassword with code already used
+                  value:
+                    error: Reset code is already used or changed
+                example-1:
+                  summary: ResetUserPassword with empty new password
+                  value:
+                    error: New password is not valid
+  /api/v1/sessions:
+    post:
+      tags:
+        - Sessions
+      summary: CreateSession
+      description: |-
+        Авторизация \\ Создание сессии
+
+        email: email(логин) зарегестрированного пользователя
+
+        password: Пароль указанный при регестрации или после смены пароля
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: Some3test@gmail.com
+                password: Some3test@gmail.com
+      responses:
+        '201':
+          description: Created
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 11:33:24 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '0'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache="Set-Cookie"
+            Set-Cookie:
+              schema:
+                type: string
+                example: >-
+                  session=-bfDGP68vUlZKVBQm8WSuvDVCn3ivXRtf8HJ7OnoHPI; Path=/;
+                  Domain=prgms.io; Expires=Tue, 21 Nov 2023 11:33:25 GMT;
+                  Max-Age=86400; HttpOnly; Secure; SameSite=Strict
+            Trace-Id:
+              schema:
+                type: string
+                example: 9f0f2a52-b05c-495b-b7fa-5925648b8ad1
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 9f0f2a52-b05c-495b-b7fa-5925648b8ad1
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=N%2BNHpEIJ8NMmyEq6y9RMg%2BUL2ac0YizrxTco0gTsNheLyCyX2J8UBPc%2FBazqW9ijhSalQZBK7ea9zJon5NKsEvxb%2B1OhVzL4ZWf%2F6nUU1jV9JUCRVFv7ikAWPzgCLSg%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 829060bc1a5c664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example: {}
+        '422':
+          description: Unprocessable Entity
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 11:51:19 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '45'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 7ad60213-f05c-4934-a827-5e91aec04252
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 7ad60213-f05c-4934-a827-5e91aec04252
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=Iewheg2E9vigJQ9ASXcw%2FWEdt%2FVb1sUqoR7ioeqlo9i6Dn3fyd91zIxpoZ1HGq2hHZMkR5tt%2BSvGwJOF9Fh%2BOZQ358QH%2F%2FIwpjWJ8CI5K6raouCQ6pzDvzK4IRYhjKg%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 82907afaeeb4664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: CreateSession with empty fields
+                  value:
+                    error: User not found or wrong password
+                example-1:
+                  summary: CreateSession with user not exist
+                  value:
+                    error: User not found or wrong password
+                example-2:
+                  summary: CreateSession with wrong password
+                  value:
+                    error: User not found or wrong password
+                example-3:
+                  summary: CreateSession with empty password fild for exist user
+                  value:
+                    error: User not found or wrong password
+    delete:
+      tags:
+        - Sessions
+      summary: DeleteCurrentSession
+      description: >-
+        Log OUT\\Удаление сессии
+
+
+        Требуется наличие активной сессии(пользователь авторизован через логин
+        пароль)
+      responses:
+        '200':
+          description: OK
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 11:42:15 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '0'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache="Set-Cookie"
+            Set-Cookie:
+              schema:
+                type: string
+                example: >-
+                  session=; Path=/; Domain=prgms.io; Expires=Thu, 01 Jan 1970
+                  00:00:01 GMT; Max-Age=0; HttpOnly; Secure; SameSite=Strict
+            Trace-Id:
+              schema:
+                type: string
+                example: 685d15e5-d231-4877-9e6c-9838da875029
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 685d15e5-d231-4877-9e6c-9838da875029
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=FOKCbRl8RjxvOet0w88H%2BFo2Nw4D1CwnwqlAzM%2B1GlAawUlkBm1iWk0mnTQGLcmFXcYQKybQtwDMckl%2F35VaEPjcLNyzcl8y64J%2F8JD7W3B0gCCHek4ExPluL3c9ePM%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 82906db4ae37664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example: {}
+  /api/v1/accounts/16984616984691:
+    get:
+      tags:
+        - account
+      summary: GetAccount
+      description: >-
+        Получение информации об аккаунте(балансе) проекта
+
+
+        Для данного метода необходимо наличие 1 проекта, баланс которого
+        отображается в методе
+
+
+        Требуется наличие активной сессии(пользователь авторизован через логин
+        пароль)
+
+
+        RESPONCE
+
+
+        ``` json
+
+        {
+            "id": 240925,
+            "type": "debit_normal",
+            "balance": "49646.89"
+        }
+
+         ```
+      responses:
+        '200':
+          description: OK
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:05:31 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 64ff3d13-fb73-466e-b5ce-5e2f68792340
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 64ff3d13-fb73-466e-b5ce-5e2f68792340
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=Uy4peKda3vmMZZ9na5QWreRTOzvDxuZThbYHjIQ96ef4JnAkVvzpvLtX%2F376XhmhFPvoJR7YGp8spoxhCkwhJKhGtwryGi6Db20srMLzZnwL3tP6Luvwa%2BsFkw7KZ0U%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 82908fc4caf2664f-AMS
+            Content-Encoding:
+              schema:
+                type: string
+                example: br
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: 240936
+                type: debit_normal
+                balance: '0'
+        '404':
+          description: Not Found
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:05:04 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '30'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 18805493-e3ef-4c1b-9125-668f599c932e
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 18805493-e3ef-4c1b-9125-668f599c932e
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=k9P6GP4zMsQVKZMc7cDLRpWBdMYkzxKjoszvm7BLeTeSdpoXAiQB1gUJvrXr%2BMdXFcR%2FJyejrqHwV0z3egD0AluLbtRKpVdjcQwLmWAa7W0fX8BSuywMSFWuhNPtHcU%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 82908f1bdee0664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: GetAccount with account not under user control
+                  value:
+                    error: Account not found
+                example-1:
+                  summary: GetAccount with not exist account
+                  value:
+                    error: Account not found
+  /api/v1/invoices:
+    post:
+      tags:
+        - invoices
+      summary: CreateInvoice
+      description: >-
+        Создание Invoice
+
+
+        ammount: Сумма
+
+
+        onlineStoreId: id проекта в котором создается invoice
+
+
+        currencyCode: Валюта
+
+
+        orderId: Генерируемое значение для создания invoice, для каждого invoice
+        внутри проекта должно быть уникальным
+
+
+        Требуется наличие активной сессии(пользователь авторизован через логин
+        пароль)
+
+
+        Требуется наличие 1 проекта
+
+
+        RESPONCE
+
+
+        ``` json
+
+        {
+            "invoiceId": "gtzrpTJo"
+        }
+
+         ```
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                amount: 5
+                onlineStoreId: 93
+                currencyCode: BTC
+                orderId: '{{$randomUUID}}'
+      responses:
+        '201':
+          description: Created
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:07:08 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '25'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 8e66953f-a46d-42ce-a33f-4250ef6e17e8
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 8e66953f-a46d-42ce-a33f-4250ef6e17e8
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=2%2F%2BJXeZN4Ir8Czuz6LVFI%2F2yMQaXfW9DtbIRzCio%2FdWwGtw51Id4%2FaHrjv3d6Wa69B5GEaymR3iYR5OFbi9urZo7ZO7RliRG9kymipLexdGBRddqkJyruEnBkmr91nQ%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 829092258901664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: CreateInvoice
+                  value:
+                    invoiceId: xZHadpKo
+                example-1:
+                  summary: CreateInvoice with ammount decimal 0.0x
+                  value:
+                    invoiceId: rpHMRnqT
+        '422':
+          description: Unprocessable Entity
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:07:36 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '24'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 6436f723-20c6-48c7-a232-fb69dce233b3
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 6436f723-20c6-48c7-a232-fb69dce233b3
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=YNsIwM4M39oEpSqVP4T1c19NVE0erqDDL5GkxbVMQiEnPo%2Fd004%2F%2F5TGXdacLdmHP65rCH1BJ8SIuV4GgDviQn92M%2BL3GU0g8JX7zHn4q2oVLsWfwz0Qlo%2FkJwnIkNc%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 829092d5ace6664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: CreateInvoice with store not under  user control
+                  value:
+                    error: Wrong store
+                example-1:
+                  summary: CreateInvoice with not exist store
+                  value:
+                    error: Wrong store
+                example-2:
+                  summary: CreateInvoice with empty store field
+                  value:
+                    error: Wrong store
+                example-3:
+                  summary: CreateInvoice with not uniq order id
+                  value:
+                    error: OrderID not unique
+                example-4:
+                  summary: CreateInvoice with empty order id
+                  value:
+                    error: order_id can't be blank
+                example-5:
+                  summary: CreateInvoice with 0 ammount
+                  value:
+                    error: amount should be positive
+                example-6:
+                  summary: CreateInvoice with negative ammount
+                  value:
+                    error: amount should be positive
+                example-7:
+                  summary: CreateInvoice with decimal more then to symbols behind to 0
+                  value:
+                    error: amount can't have decimal part with > 2 digits
+                example-8:
+                  summary: CreateInvoice with empty field
+                  value:
+                    error: amount should be positive
+                example-9:
+                  summary: CreateInvoice with currency not avilable
+                  value:
+                    error: Error while creating invoice
+        '500':
+          description: Internal Server Error
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:42:20 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '34'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: c91003b8-40cf-400a-8ad5-b56c82ddb8c5
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: c91003b8-40cf-400a-8ad5-b56c82ddb8c5
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=W75u2mVmv0PyYEybutNS23raNC9Nms4Rj5%2BvXl114dYtzNmoUSdnn6tLbfjyDVEfNnel0wpWI7KgIOmxYouDtB6kA60Sj3CADfyBVZJW0KU1x5WqPcBcE2g%2FnhanWsQ%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 8290c5b5fe05664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: internal server error
+    get:
+      tags:
+        - invoices
+      summary: GetInvoices
+      description: >-
+        Получения списка invoice
+
+
+        Для списка используется пагинация  
+
+        где page: кол-во страниц
+
+
+        perPage: кол-во значений на странице
+
+
+        Требуется наличие активной сессии(пользователь авторизован через логин
+        пароль)
+
+
+        Требуется наличие 1 проекта
+
+
+        RESPONCE
+
+
+        ``` json
+
+        "meta": {
+                "total": 4
+            },
+            "invoices": [
+                {
+                    "id": "gtzrpTJo",
+                    "status": "pending",
+                    "currencyCode": "USDT",
+                    "amount": "50000",
+                    "accrued": "0",
+                    "walletAddress": "",
+                    "orderId": "18596411541556415589151521984",
+                    "createdAt": "2023-11-17T14:33:27.795748Z"
+                }
+
+         ```
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: perPage
+          in: query
+          schema:
+            type: integer
+          example: '10'
+        - name: dateFrom
+          in: query
+          schema:
+            type: string
+          example: '2023-11-20'
+        - name: dateTo
+          in: query
+          schema:
+            type: string
+          example: '2023-11-20'
+        - name: onlineStoreId
+          in: query
+          schema:
+            type: integer
+          example: '123'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:15:39 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 174c68ed-fda8-4416-b996-6a261a4cdfc3
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 174c68ed-fda8-4416-b996-6a261a4cdfc3
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=vc9%2F476gJcoBMuAW%2Fe6pnqc1ztgVuCKSOza%2BUeRt59CVEcpshXWEBYOyw9ksi9QNIEacZm0gGPR8svxDa9gi01JhCFZS%2BWiIMTzdtIFtqJeUZ53fOdHNRv5EQiYTr1A%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 82909e9ce8d5664f-AMS
+            Content-Encoding:
+              schema:
+                type: string
+                example: br
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: GetInvoices
+                  value:
+                    meta:
+                      total: 3
+                    invoices:
+                      - id: Lhsnzsbk
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: edbb229b-e260-4537-8ff9-265870aa6e70
+                        createdAt: '2023-11-20T12:14:42.725412Z'
+                      - id: rpHMRnqT
+                        status: pending
+                        currencyCode: USDT
+                        amount: '0.05'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '1234'
+                        createdAt: '2023-11-20T12:10:49.313297Z'
+                      - id: xZHadpKo
+                        status: pending
+                        currencyCode: USDT
+                        amount: '50000'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '123'
+                        createdAt: '2023-11-20T12:07:08.425248Z'
+                example-1:
+                  summary: GetInvoices with date
+                  value:
+                    meta:
+                      total: 10
+                    invoices:
+                      - id: rCkRYMPJ
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '12345678901'
+                        createdAt: '2023-11-20T12:18:11.083641Z'
+                      - id: zCHXRKMk
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '1234567890'
+                        createdAt: '2023-11-20T12:18:07.443611Z'
+                      - id: flvyTIkR
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '123456789'
+                        createdAt: '2023-11-20T12:18:04.680959Z'
+                      - id: kVitzdyg
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '12345678'
+                        createdAt: '2023-11-20T12:18:01.287819Z'
+                      - id: vGyvyKdv
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '1234567'
+                        createdAt: '2023-11-20T12:17:57.947181Z'
+                      - id: QeBqQRTy
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '123456'
+                        createdAt: '2023-11-20T12:17:54.739219Z'
+                      - id: tQcgGdxo
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '12345'
+                        createdAt: '2023-11-20T12:17:50.609777Z'
+                      - id: Lhsnzsbk
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: edbb229b-e260-4537-8ff9-265870aa6e70
+                        createdAt: '2023-11-20T12:14:42.725412Z'
+                      - id: rpHMRnqT
+                        status: pending
+                        currencyCode: USDT
+                        amount: '0.05'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '1234'
+                        createdAt: '2023-11-20T12:10:49.313297Z'
+                      - id: xZHadpKo
+                        status: pending
+                        currencyCode: USDT
+                        amount: '50000'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '123'
+                        createdAt: '2023-11-20T12:07:08.425248Z'
+                example-2:
+                  summary: GetInvoices with store not under control
+                  value:
+                    meta:
+                      total: 0
+                    invoices: []
+                example-3:
+                  summary: GetInvoices with 1 object in  pagination
+                  value:
+                    meta:
+                      total: 3
+                    invoices:
+                      - id: Lhsnzsbk
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: edbb229b-e260-4537-8ff9-265870aa6e70
+                        createdAt: '2023-11-20T12:14:42.725412Z'
+                example-4:
+                  summary: GetInvoices with 5 object in pagination
+                  value:
+                    meta:
+                      total: 10
+                    invoices:
+                      - id: rCkRYMPJ
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '12345678901'
+                        createdAt: '2023-11-20T12:18:11.083641Z'
+                      - id: zCHXRKMk
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '1234567890'
+                        createdAt: '2023-11-20T12:18:07.443611Z'
+                      - id: flvyTIkR
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '123456789'
+                        createdAt: '2023-11-20T12:18:04.680959Z'
+                      - id: kVitzdyg
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '12345678'
+                        createdAt: '2023-11-20T12:18:01.287819Z'
+                      - id: vGyvyKdv
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '1234567'
+                        createdAt: '2023-11-20T12:17:57.947181Z'
+                example-5:
+                  summary: GetInvoices with 10 object in pagination
+                  value:
+                    meta:
+                      total: 10
+                    invoices:
+                      - id: rCkRYMPJ
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '12345678901'
+                        createdAt: '2023-11-20T12:18:11.083641Z'
+                      - id: zCHXRKMk
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '1234567890'
+                        createdAt: '2023-11-20T12:18:07.443611Z'
+                      - id: flvyTIkR
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '123456789'
+                        createdAt: '2023-11-20T12:18:04.680959Z'
+                      - id: kVitzdyg
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '12345678'
+                        createdAt: '2023-11-20T12:18:01.287819Z'
+                      - id: vGyvyKdv
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '1234567'
+                        createdAt: '2023-11-20T12:17:57.947181Z'
+                      - id: QeBqQRTy
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '123456'
+                        createdAt: '2023-11-20T12:17:54.739219Z'
+                      - id: tQcgGdxo
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '12345'
+                        createdAt: '2023-11-20T12:17:50.609777Z'
+                      - id: Lhsnzsbk
+                        status: pending
+                        currencyCode: USDT
+                        amount: '5'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: edbb229b-e260-4537-8ff9-265870aa6e70
+                        createdAt: '2023-11-20T12:14:42.725412Z'
+                      - id: rpHMRnqT
+                        status: pending
+                        currencyCode: USDT
+                        amount: '0.05'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '1234'
+                        createdAt: '2023-11-20T12:10:49.313297Z'
+                      - id: xZHadpKo
+                        status: pending
+                        currencyCode: USDT
+                        amount: '50000'
+                        accrued: '0'
+                        walletAddress: ''
+                        orderId: '123'
+                        createdAt: '2023-11-20T12:07:08.425248Z'
+                example-6:
+                  summary: GetInvoices with date invoice not created
+                  value:
+                    meta:
+                      total: 0
+                    invoices: []
+        '422':
+          description: Unprocessable Entity
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:24:07 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '46'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 4eec3634-bf4a-4915-a6ce-15d84f1f87a6
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 4eec3634-bf4a-4915-a6ce-15d84f1f87a6
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=vD2%2BL%2Boi1nDGJZ4yz6u2bV5aW60sF8qXLtRPdyoM4z1mZAlyvbGRB6mpaKzcTJchmA1kK2F1MuI0ikEw%2B3u9wFa9lMZ3W75vbO9YWDIoCh%2FxUV%2Bh73ogu4ytSyFXP6s%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 8290ab069f24664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: date_to should be after date_from
+  /api/v1/external/invoices:
+    post:
+      tags:
+        - invoices
+      summary: ExternalInvoice
+      description: >-
+        Создание invoice с использованием API_KEY
+
+
+        Авторизация проходит по api key указаному в header как Authorization:
+        Token
+
+
+        Требуется наличие 1 проекта
+
+
+        RESPONCE
+
+
+        ``` json
+
+        {
+            "invoiceId": "gtzrpTJo"
+        }
+
+         ```
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                amount: 5
+                onlineStoreId: 123
+                currencyCode: BNB
+                orderId: '{{randomUUID}}'
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Token {{api_key}}
+      responses:
+        '201':
+          description: Created
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:30:15 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '25'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 4141e020-90d3-461b-997d-02e4a9520a99
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 4141e020-90d3-461b-997d-02e4a9520a99
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=kPSeqqeYIGsB461zk4lmluPEpJYo0VyL%2F%2F5qs6elFHL456JxYlgLSW7qaLZJ4QwyjVTRepHyEQ77Zfgbnq6L043q2Pc760r71j5jeKj3Xmhmw4nwgsAo6RXOwcS18vg%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 8290b400cfe8664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: ExternalInvoice
+                  value:
+                    invoiceId: sIhkccAn
+                example-1:
+                  summary: ExternalInvoice with decimal 2 digits
+                  value:
+                    invoiceId: NCgsBRty
+        '400':
+          description: Bad Request
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:38:17 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '30'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 2b7ff7d0-1864-4fe5-a7d7-a1971303cb47
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 2b7ff7d0-1864-4fe5-a7d7-a1971303cb47
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=l7gLxN4vBYZBlB%2FlWdm6QaK%2BxfyWdp5xX9Yd5WFcRA92eOAKMA%2B%2BsVD3Mfty6%2FcZneYWRo6KwS7Ezf7eA1rFv0xVKc3f1FdcKTYIyQgNpE7rVBb6QRLm8nbCouEm7Ss%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 8290bfc8abcc664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: Malformed payload
+        '401':
+          description: Unauthorized
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:31:45 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: text/plain; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '25'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 6690ab8d-229b-4729-9aca-cd6487debcd5
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 6690ab8d-229b-4729-9aca-cd6487debcd5
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=EqeLzTOQh3mJuVFD3xD4HWMRvdQLZS6mSEfC1sqe5dwwN7p%2B8x0uHTTzNcKQ6GMPuewWTcsqmN%2F8nvEbK%2BZutZwAGB7KNOMgKEuOi3fHZYptr6LpGrGHaZ%2Bbv3GETWc%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 8290b636ffec664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                example-0:
+                  summary: ExternalInvoice without tokken
+                  value: |
+                    {"error":"Unauthorized"}
+                example-1:
+                  summary: ExternalInvoice with wrong token
+                  value: |
+                    {"error":"Unauthorized"}
+        '422':
+          description: Unprocessable Entity
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:29:45 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '31'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 74134248-795f-4222-b833-3172c5786d1c
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 74134248-795f-4222-b833-3172c5786d1c
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=A%2F4fk%2B5KuR9S%2BMOXatJEdPB%2Fk6Tk9wLyCmwk5xfyTJsWjzjjq21DV5QzaTNXwhw6EKjd4VZbkTj2kusNiMZpQEC%2FJTIsYzsFE2G%2BOibhUjtmXdC2Wes7ljQEzUK%2BV2k%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 8290b347bea5664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: ExternalInvoice with not uniq order id
+                  value:
+                    error: OrderID not unique
+                example-1:
+                  summary: ExternalInvoice with store not under control
+                  value:
+                    error: Wrong store
+                example-2:
+                  summary: ExternalInvoice with store not exist
+                  value:
+                    error: Wrong store
+                example-3:
+                  summary: ExternalInvoice with empty store field
+                  value:
+                    error: Wrong store
+                example-4:
+                  summary: ExternalInvoice with decimal more then 2 digits
+                  value:
+                    error: amount can't have decimal part with > 2 digits
+                example-5:
+                  summary: ExternalInvoice with 0 ammount
+                  value:
+                    error: amount should be positive
+                example-6:
+                  summary: ExternalInvoice with negative ammount
+                  value:
+                    error: amount should be positive
+                example-7:
+                  summary: ExternalInvoice with not avilable currency
+                  value:
+                    error: Error while creating invoice
+  /api/v1/payments/vOvyBMOe:
+    get:
+      tags:
+        - invoices
+      summary: GetInvoice
+      description: >-
+        Получение информации о invoice по invoice id
+
+
+        где после последнего / в урле указываем id транзакции
+
+
+        Требуется наличие активной сессии(пользователь авторизован через логин
+        пароль)
+
+
+        Требуется наличие 1 проекта
+
+
+        Требуется наличие уже созданного invoice
+      responses:
+        '200':
+          description: OK
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:44:33 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 2b6aa4a9-1a6c-42f9-9658-f07c1a2af0a6
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 2b6aa4a9-1a6c-42f9-9658-f07c1a2af0a6
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=g%2FLYlOMAsB0FHxWWMuwBPjdoQGd6jGpuMEkPtlCWf%2BOrS56Ac47iQnnMxnetUgHW%2BLfUY%2FA%2FWi1OYpGkM%2FfinO6g4OuuvPHDkgCHBj5HwBCnSzYbEuEDqKIYRxPol3A%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 8290c8f468f9664f-AMS
+            Content-Encoding:
+              schema:
+                type: string
+                example: br
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: GetInvoice
+                  value:
+                    id: RlccXZpI
+                    orderId: '123455678901'
+                    amount: '5'
+                    currencyCode: USDT
+                    expiresAt: '2023-11-20T13:14:27.296091Z'
+                    blockchains:
+                      - TRON
+                example-1:
+                  summary: GetInvoice with invoice public
+                  value:
+                    id: vOvyBMOe
+                    orderId: '123455678901'
+                    amount: '5'
+                    currencyCode: USDT
+                    expiresAt: '2023-11-20T13:15:43.474595Z'
+                    blockchains:
+                      - TRON
+        '404':
+          description: Not Found
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:44:50 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '30'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: cc60d352-7793-4924-9b57-80c46c2f0a06
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: cc60d352-7793-4924-9b57-80c46c2f0a06
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=c7IMEL8HGNyhejjj3FQBi5X0o2fSt1Rham8BybQqEsZPqqD4g5kE9eg26KT2CkydXBoS0PXLRJoXvFzE3A3UNji3hRBWvI8ntDqoCgVTNy2U5NrQ%2FmfoJdocbVVNDzY%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 8290c95d8901664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: Invoice not found
+  /api/v1/payments/RlccXZpI:
+    put:
+      tags:
+        - invoices
+      summary: UpdateInvoiceBlockchain
+      description: >-
+        Подключение транзакции к blockchain сети
+
+
+        blockchainCode: Код блокчейн сети для использования данной сети в
+        транзакции
+
+
+        Требуется наличие активной сессии(пользователь авторизован через логин
+        пароль)
+
+
+        Требуется наличие 1 проекта
+
+
+        Требуется наличие уже созданного invoice
+
+
+        RESPONCE
+
+
+        ``` json
+
+        {
+            "walletAddress": "TPmwj6sbhiMYQDxhCTiGtwiTtWadLse4hs",
+            "expiresAt": "2023-11-17T15:03:27.795641Z"
+        }
+
+         ```
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                blockchainCode: TRON
+      responses:
+        '200':
+          description: OK
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:52:20 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 96c72a3a-c330-48fb-8efc-f13bdbb605d8
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 96c72a3a-c330-48fb-8efc-f13bdbb605d8
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=skwx7hSK5VCxdFHicXk65CWBFyt%2BwLS%2FUtcyt%2FbqzzBh6ABPcLtY3wzOAwr86sqbyo1j0AepDyrz1v%2F5RJo2XNJJKe%2B1yLNAW6Xu8pHAcMR3QYTvUqYxM%2BAKBljF1b4%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 8290d459fc7e664f-AMS
+            Content-Encoding:
+              schema:
+                type: string
+                example: br
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: UpdateInvoiceBlockchain
+                  value:
+                    walletAddress: TT4vGkXVQDR6QTEHrjasVwVLNHDJqqHoYt
+                    expiresAt: '2023-11-20T13:14:27.296091Z'
+                example-1:
+                  summary: UpdateInvoiceBlockchain with invoice public
+                  value:
+                    walletAddress: TSv5Qf4X1UkX9Rph7LbBKqomVzUDQqsnJe
+                    expiresAt: '2023-11-20T13:15:43.474595Z'
+  /api/v1/online_stores:
+    get:
+      tags:
+        - online_stores
+      summary: GetOnlineStores
+      description: >-
+        Получение списка проектов текущего пользователя
+
+
+        Выводит список всех проектов созданных текущим пользователем
+
+
+        Требуется наличие активной сессии(пользователь авторизован через логин
+        пароль)
+
+
+        RESPONCE
+
+
+        ``` json
+
+        [
+            {
+                "id": 93,
+                "name": "online_store_store"
+            },
+
+         ```
+      responses:
+        '200':
+          description: OK
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 11:57:14 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 52bbafc5-26f0-4b71-a8f2-37f6261fba09
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 52bbafc5-26f0-4b71-a8f2-37f6261fba09
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=YwV4dpQP4zhKrJ3tPwL0cWdTa4cREZboo6eeXV5FztZnr7yOPdOs3zqcyhi7EuitbZiEUOdtyKmGbO4IGT4DmoH7t0COIG5WxmJfajVtJ2%2FuPzwIV6aA2S0cxGiH3Os%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 829083a57df0664f-AMS
+            Content-Encoding:
+              schema:
+                type: string
+                example: br
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                - id: 123
+                  name: online_store12
+                - id: 124
+                  name: online_store12
+    post:
+      tags:
+        - online_stores
+      summary: CreateOnlineStore
+      description: >-
+        Создание проекта
+
+
+        Требуется наличие активной сессии(пользователь авторизован через логин
+        пароль)
+
+
+        name: Название проекта
+
+
+        description: Описание проекта
+
+
+        website: ссылка на сайт проекта
+
+
+        userRedirectUrl: ссылка на редирект после оплаты
+
+
+        callbackUrl: ссылка для отправки вебхуков\\callback при совершении
+        действия внутри проекта
+
+
+        RESPONCE
+
+
+        ``` json
+
+        {
+            "storeId": 122
+        }
+
+         ```
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: online_store12
+                description: some online store
+                website: http://store.com
+                userRedirectUrl: http://store.com
+                callbacksUrl: http://store.com
+      responses:
+        '201':
+          description: Created
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 11:54:26 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '16'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: ed4b2c43-1bb9-4467-b609-af3ed81d13d1
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: ed4b2c43-1bb9-4467-b609-af3ed81d13d1
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=gLlyPA4zQGiQ6K4Dh%2FhKO0X13OR3Ow8xuaYLM9nUMxiFczEexw0W0xVw7RPqhQlApt1llE6zjt5yzjq6kE9ndG4hPNlhjJlWQc%2FjT3jmB10fGtOLxT%2F39fGw6dmi0gw%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 82907f8a09a7664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                storeId: 123
+        '502':
+          description: Bad Gateway
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 11:54:44 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: text/html; charset=UTF-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '6315'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=W30b2KzhiBhkMpvQRaVPOR4agSDcrRuDAAyKe1gpFUhjhxM1rD6YyCOz2bGdYPwDzT%2Ftkl4xMD%2FRALjAH%2FXkUpZg%2F%2FPXwhrUYeYB6Q8dXeyKZSJ6yS32RZKzonFHRlQ%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            Referrer-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cache-Control:
+              schema:
+                type: string
+                example: >-
+                  private, max-age=0, no-store, no-cache, must-revalidate,
+                  post-check=0, pre-check=0
+            Expires:
+              schema:
+                type: string
+                example: Thu, 01 Jan 1970 00:00:01 GMT
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 82907ffe78d8664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                <!DOCTYPE html>
+                <!--[if lt IE 7]>
+                <html class="no-js ie6 oldie" lang="en-US">
+                    <![endif]-->
+                    <!--[if IE 7]>
+                    <html class="no-js ie7 oldie" lang="en-US">
+                        <![endif]-->
+                        <!--[if IE 8]>
+                        <html class="no-js ie8 oldie" lang="en-US">
+                            <![endif]-->
+                            <!--[if gt IE 8]>
+                            <!-->
+                            <html class="no-js" lang="en-US">
+                                <!--
+                                <![endif]-->
+                                <head>
+                                    <title>api.prgms.io | 502: Bad gateway</title>
+                                    <meta charset="UTF-8" />
+                                    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+                                    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+                                    <meta name="robots" content="noindex, nofollow" />
+                                    <meta name="viewport" content="width=device-width,initial-scale=1" />
+                                    <link rel="stylesheet" id="cf_styles-css" href="/cdn-cgi/styles/main.css" />
+                                </head>
+                                <body>
+                                    <div id="cf-wrapper">
+                                        <div id="cf-error-details" class="p-0">
+                                            <header class="mx-auto pt-10 lg:pt-6 lg:px-8 w-240 lg:w-full mb-8">
+                                                <h1 class="inline-block sm:block sm:mb-2 font-light text-60 lg:text-4xl text-black-dark leading-tight mr-2">
+                                                    <span class="inline-block">Bad gateway</span>
+                                                    <span class="code-label">Error code 502</span>
+                                                </h1>
+                                                <div>
+                               Visit 
+                                                    <a href="https://www.cloudflare.com/5xx-error-landing?utm_source=errorcode_502&utm_campaign=api.prgms.io" target="_blank" rel="noopener noreferrer">cloudflare.com</a> for more information.
+                                                </div>
+                                                <div class="mt-3">2023-11-20 11:54:44 UTC</div>
+                                            </header>
+                                            <div class="my-8 bg-gradient-gray">
+                                                <div class="w-240 lg:w-full mx-auto">
+                                                    <div class="clearfix md:px-8">
+                                                        <div id="cf-browser-status" class=" relative w-1/3 md:w-full py-15 md:p-0 md:py-8 md:text-left md:border-solid md:border-0 md:border-b md:border-gray-400 overflow-hidden float-left md:float-none text-center">
+                                                            <div class="relative mb-10 md:m-0">
+                                                                <span class="cf-icon-browser block md:hidden h-20 bg-center bg-no-repeat"></span>
+                                                                <span class="cf-icon-ok w-12 h-12 absolute left-1/2 md:left-auto md:right-0 md:top-0 -ml-6 -bottom-4"></span>
+                                                            </div>
+                                                            <span class="md:block w-full truncate">You</span>
+                                                            <h3 class="md:inline-block mt-3 md:mt-0 text-2xl text-gray-600 font-light leading-1.3">
+                    
+                    Browser
+                    
+                  </h3>
+                                                            <span class="leading-1.3 text-2xl text-green-success">Working</span>
+                                                        </div>
+                                                        <div id="cf-cloudflare-status" class=" relative w-1/3 md:w-full py-15 md:p-0 md:py-8 md:text-left md:border-solid md:border-0 md:border-b md:border-gray-400 overflow-hidden float-left md:float-none text-center">
+                                                            <div class="relative mb-10 md:m-0">
+                                                                <a href="https://www.cloudflare.com/5xx-error-landing?utm_source=errorcode_502&utm_campaign=api.prgms.io" target="_blank" rel="noopener noreferrer">
+                                                                    <span class="cf-icon-cloud block md:hidden h-20 bg-center bg-no-repeat"></span>
+                                                                    <span class="cf-icon-ok w-12 h-12 absolute left-1/2 md:left-auto md:right-0 md:top-0 -ml-6 -bottom-4"></span>
+                                                                </a>
+                                                            </div>
+                                                            <span class="md:block w-full truncate">Amsterdam</span>
+                                                            <h3 class="md:inline-block mt-3 md:mt-0 text-2xl text-gray-600 font-light leading-1.3">
+                                                                <a href="https://www.cloudflare.com/5xx-error-landing?utm_source=errorcode_502&utm_campaign=api.prgms.io" target="_blank" rel="noopener noreferrer">
+                    Cloudflare
+                    </a>
+                                                            </h3>
+                                                            <span class="leading-1.3 text-2xl text-green-success">Working</span>
+                                                        </div>
+                                                        <div id="cf-host-status" class="cf-error-source relative w-1/3 md:w-full py-15 md:p-0 md:py-8 md:text-left md:border-solid md:border-0 md:border-b md:border-gray-400 overflow-hidden float-left md:float-none text-center">
+                                                            <div class="relative mb-10 md:m-0">
+                                                                <span class="cf-icon-server block md:hidden h-20 bg-center bg-no-repeat"></span>
+                                                                <span class="cf-icon-error w-12 h-12 absolute left-1/2 md:left-auto md:right-0 md:top-0 -ml-6 -bottom-4"></span>
+                                                            </div>
+                                                            <span class="md:block w-full truncate">api.prgms.io</span>
+                                                            <h3 class="md:inline-block mt-3 md:mt-0 text-2xl text-gray-600 font-light leading-1.3">
+                    
+                    Host
+                    
+                  </h3>
+                                                            <span class="leading-1.3 text-2xl text-red-error">Error</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-240 lg:w-full mx-auto mb-8 lg:px-8">
+                                                <div class="clearfix">
+                                                    <div class="w-1/2 md:w-full float-left pr-6 md:pb-10 md:pr-0 leading-relaxed">
+                                                        <h2 class="text-3xl font-normal leading-1.3 mb-4">What happened?</h2>
+                                                        <p>The web server reported a bad gateway error.</p>
+                                                    </div>
+                                                    <div class="w-1/2 md:w-full float-left leading-relaxed">
+                                                        <h2 class="text-3xl font-normal leading-1.3 mb-4">What can I do?</h2>
+                                                        <p class="mb-6">Please try again in a few minutes.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="cf-error-footer cf-wrapper w-240 lg:w-full py-10 sm:py-4 sm:px-8 mx-auto text-center sm:text-left border-solid border-0 border-t border-gray-300">
+                                                <p class="text-13">
+                                                    <span class="cf-footer-item sm:block sm:mb-1">Cloudflare Ray ID: 
+                                                        <strong class="font-semibold">82907ffe78d8664f</strong>
+                                                    </span>
+                                                    <span class="cf-footer-separator sm:hidden">&bull;</span>
+                                                    <span id="cf-footer-item-ip" class="cf-footer-item hidden sm:block sm:mb-1">
+                      Your IP:
+                      
+                                                        <button type="button" id="cf-footer-ip-reveal" class="cf-footer-ip-reveal-btn">Click to reveal</button>
+                                                        <span class="hidden" id="cf-footer-ip">178.252.194.45</span>
+                                                        <span class="cf-footer-separator sm:hidden">&bull;</span>
+                                                    </span>
+                                                    <span class="cf-footer-item sm:block sm:mb-1">
+                                                        <span>Performance &amp; security by</span>
+                                                        <a rel="noopener noreferrer" href="https://www.cloudflare.com/5xx-error-landing?utm_source=errorcode_502&utm_campaign=api.prgms.io" id="brand_link" target="_blank">Cloudflare</a>
+                                                    </span>
+                                                </p>
+                                                <script>(function(){function d(){var b=a.getElementById("cf-footer-item-ip"),c=a.getElementById("cf-footer-ip-reveal");b&&"classList"in b&&(b.classList.remove("hidden"),c.addEventListener("click",function(){c.classList.add("hidden");a.getElementById("cf-footer-ip").classList.remove("hidden")}))}var a=document;document.addEventListener&&a.addEventListener("DOMContentLoaded",d)})();</script>
+                                            </div>
+                                            <!-- /.error-footer -->
+
+
+                    
+                                        </div>
+                                    </div>
+                                </body>
+                            </html>
+  /api/v1/online_stores/123:
+    get:
+      tags:
+        - online_stores
+      summary: GetOnlineStore
+      description: >-
+        Получение информации о проекте по id
+
+
+        id подставляется после online_store/{id}
+
+
+        Требуется наличие активной сессии(пользователь авторизован через логин
+        пароль)
+
+
+        Требуется наличие 1 проекта
+
+
+        RESPONCE
+
+
+        ``` json
+
+        {
+            "id": 116,
+            "description": "some online store",
+            "name": "online_store",
+            "merchantId": 204,
+            "website": "http://store.com",
+            "userRedirectUrl": "http://store.com",
+            "callbacksUrl": "http://store.com",
+            "currencies": [
+                "USDT"
+            ],
+            "apiKey": "8wnDbR7IFhdEytzI7GQDVzAsSg5tOfzWQCAaAKnhGCM=",
+            "accountIds": [
+                240925
+            ],
+            "callbackKey": "7w/sH5+WxAA2sSqAjX+IB1dZySMGjOpzAKEjA3XBAJA="
+        }
+
+         ```
+      responses:
+        '200':
+          description: OK
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 11:56:43 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: b19da6eb-878c-466e-89a8-1c2eb266b357
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: b19da6eb-878c-466e-89a8-1c2eb266b357
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=j5wkzbEfW%2FaY5HI7qnKTuvyNAwviG7cFK67M5P4uC5Tmk75bcOn1HH6xC0ZA%2Br4rZjecshUEirtfQrSYaKHZ8jWHbI25JwvPmFvUtlzTOX8laZNlygpS4%2FKUb%2Bmvy1Y%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 829082e29ba7664f-AMS
+            Content-Encoding:
+              schema:
+                type: string
+                example: br
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: 123
+                description: some online store
+                name: online_store12
+                merchantId: 221
+                website: http://store.com
+                userRedirectUrl: http://store.com
+                callbacksUrl: http://store.com
+                currencies:
+                  - USDT
+                apiKey: DhVboro4wE5Dv2ppzyFrH6Q1V78MEc48o+3AVhnM/So=
+                accountIds:
+                  - 240936
+                callbackKey: o7b4RvP5VyRuwDNELsp3lHhZzrMNWyX6s8LZTxRxr54=
+        '401':
+          description: Unauthorized
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 11:55:27 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '33'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 3f6532c4-4063-4e4f-9b06-b24f6a2e4132
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 3f6532c4-4063-4e4f-9b06-b24f6a2e4132
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=CqPfQe4gGewOzlAaKAW0MwOVmiOi4KBZxwS9%2BujkvUoLhAvHujKBxUgyrfZTcg%2FjCaP8ohYaDVONI%2B9oe0%2FkDygFm6dZevvF35GgI3r1RwNJA%2Bov4AvuZK5008LfCoM%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 82908108888f664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: Store not authorized
+        '404':
+          description: Not Found
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 11:56:20 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '28'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 65476750-6db7-42ac-b9e4-e9892342a3af
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 65476750-6db7-42ac-b9e4-e9892342a3af
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=fmWbxYxQBk77Bc4QwNDQmpFzOIUtMtKJgP7iJ%2FcChRPM0cndK32%2FucFI02SBtcLbGh3CR4i12ICoo1OaxGUL3ZpirLmkYQaqfiv1yv7W%2FB1%2BCHBztXQIzx2lHPeYceY%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 829082553f1e664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: Store not found
+    put:
+      tags:
+        - online_stores
+      summary: UpdateOnlineStore
+      description: >-
+        Обновление онлайн магазина
+
+
+        Требуется наличие активной сессии(пользователь авторизован через логин
+        пароль)
+
+
+        Требуется 1 проект
+
+
+        name: Название проекта
+
+
+        description: Описание проекта
+
+
+        website: ссылка на сайт проекта
+
+
+        userRedirectUrl: ссылка на редирект после оплаты
+
+
+        callbackUrl: ссылка для отправки вебхуков\\callback при совершении
+        действия внутри проекта
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: online_store_store22
+                description: updated_online store_test2
+                website: http://store.com
+                userRedirectUrl: http://store.com
+                callbacksUrl: https://7119-178-252-194-45.ngrok.io/webhooks_some/
+      responses:
+        '200':
+          description: OK
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:00:27 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '0'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 04a4ea79-113a-4fac-9119-85547429ee55
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 04a4ea79-113a-4fac-9119-85547429ee55
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=mrd5wab5BwJiRIzmMxcPZBwJhh8%2FqdB4DxDo5w%2By2CB53%2FajHsB3gVeT9t8W0KIriZ9xTw28AAH4FuTr%2BTDmh4xenGoPlYbf%2F6oxzIBvj8unUEsmjJVGa7sjBM8veJI%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 8290885c28b8664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example: {}
+        '401':
+          description: Unauthorized
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:01:21 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '24'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 0f8dc905-f0ea-4c49-b80f-7e0f73027901
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 0f8dc905-f0ea-4c49-b80f-7e0f73027901
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=PYArA8FhNuwx%2FaB%2FYrMy3egoCATsbEK0kut5ttp6isHuk%2FsEE54G5w9JHjGJNPy8FFYc%2F22g4ezF1YeVr7j05fAaIckYX1KqxZCiCKyb12c8a0di673Lyjk%2BseAn9%2BQ%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 829089aa9b57664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: Wrong store
+        '404':
+          description: Not Found
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:00:37 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '28'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: cdd326ab-4c96-4218-acc5-a2f7efdd9ebe
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: cdd326ab-4c96-4218-acc5-a2f7efdd9ebe
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=gl5K0S4084lbmq0vWzAKBiTvuh3IYGxAOydQ9wW0xA6gn5%2FE%2FzMXPFcpJnjK8nq%2BEHgbR4NuOPOyUr643QbnwTvxcPXjZecAxi495JCgOQLVpImIPI1RCUflaDOp%2Fco%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 8290889ce867664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: Store not found
+  /api/v1/online_stores/123/api_keys:
+    post:
+      tags:
+        - online_stores
+      summary: GenerateApiKey
+      description: >-
+        Генерация APIKey
+
+
+        Требуется наличие активной сессии(пользователь авторизован через логин
+        пароль)
+
+
+        Требуется 1 проект
+
+
+        /online_store/{id}/api_keys где id это id проекта
+      requestBody:
+        content: {}
+      responses:
+        '201':
+          description: Created
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:02:00 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '57'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 7ab38904-72ef-4476-b5b9-49655f69aeb8
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 7ab38904-72ef-4476-b5b9-49655f69aeb8
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=gNLpUHBJ8SrN3Ls9jjwFP%2Bkapp4HQHqLD6nxh8UC%2BG82sP9q5MGTPizeelUlyLdqluZ%2BESZgVyA%2BjnkgNVuTs%2Fvboy7WUn%2BvzxbZ%2BNxkyGs2P9celCHrtGQc1AnFYT0%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 82908aa37edb664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                value: RXgN2vf7VNJMNiRC75IwTKklJKVLuwASajYhszH402s=
+        '401':
+          description: Unauthorized
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:02:46 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '24'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 3334c3b7-4ecc-43c1-8736-1c43826e92c1
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 3334c3b7-4ecc-43c1-8736-1c43826e92c1
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=%2B%2B3q0R6ZMGPIPBnfh6XO7FKHEcViGWLbeqkDHTkzkg%2F1igo3V22uc0I9o629cEDhXkv9vGoxeWdDg9J8MtxLFF2W3lDtDNmexaMCEC77UGxIrmD%2F83h283AFI6VjlfU%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 82908bbe5ede664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: Wrong store
+        '404':
+          description: Not Found
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:02:19 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '28'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 67d1aa49-b645-4718-9f67-b023944d3e7b
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 67d1aa49-b645-4718-9f67-b023944d3e7b
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=a%2F1B5SpAsYTwDoFFVFhdXIdDCiag2Nay6Xocp0eIH4lFAT21ZQsqUqjLzFPRzyOIubKEBqNjMg948AFMKW8HZwkirw5oLcyoo1BTnR3RKFZZ9cg5LMqgZhHd8nbM0iQ%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 82908b1928c6664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: Store not found
+  /api/v1/online_stores/73/callback_keys:
+    post:
+      tags:
+        - online_stores
+      summary: GenerateCallbackKey
+      description: >-
+        Генерация CallbackKey
+
+
+        Требуется наличие активной сессии(пользователь авторизован через логин
+        пароль)
+
+
+        Требуется 1 проект
+
+
+        /online_store/{id}/callback_keys где id это id проекта
+      requestBody:
+        content: {}
+      responses:
+        '201':
+          description: Created
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:04:14 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '57'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: c7819dd2-4860-4731-a25a-a4fedc04685a
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: c7819dd2-4860-4731-a25a-a4fedc04685a
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=lVIIzEfNnBDF%2Bw6X4dutGCABqUrL97LOoqxYrAWs3x2KlBScCm8PHcjkCYhZmHYhiKeHl%2BF2BDlXZgUv%2FmcL05vmPUNG0oiHZzVelmorK1HduIFCBvC2P%2FFDuKJYoIs%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 82908de98d41664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                value: k/VoQqJh3N4pt4QLOmMuqgbvbsuz7PAb7rnR4+E+Ycg=
+        '401':
+          description: Unauthorized
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:03:54 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '24'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: f683ec63-7d7c-4236-bfb1-3317de11b980
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: f683ec63-7d7c-4236-bfb1-3317de11b980
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=mfLqQAqq7OODaVzrfa5JPS0bUe5BpgcjLm11EwGi%2BsgsiLbYF4ZcdRFSlwtGvTpIlOoBpQYlOWhkN%2FpJwRVm6yZNa2dcF0oa3gX%2B%2Bapk4%2FqpSGBJRFUsmpwHosBUems%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 82908d69cd40664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: Wrong store
+        '404':
+          description: Not Found
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:04:29 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '28'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: f2b36e35-85a7-4218-ad4a-e966d5392137
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: f2b36e35-85a7-4218-ad4a-e966d5392137
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=KrSsY0NRvvA1IsZ2a4rXG1ncV4cwrZ3ORBL617Qexdu%2Br%2FiaHxPCCYsxrV2feH8tBxHry395ouZmkO7TdrhGsISguG3rrYeQpb0kbXCp91VxLA85MP55KGO6BNL7rGc%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 82908e439fb1664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: Store not found
+  /api/v1/withdrawals:
+    get:
+      tags:
+        - withdraw
+      summary: GetWithdrawals
+      description: >-
+        Получение списка выводов
+
+
+        Требуется наличие активной сессии(пользователь авторизован через логин
+        пароль)
+
+
+        Требуется 1 проект
+
+
+        В методе присутствует пагинация и фильтр по проекту
+
+
+        onlineStoreId: id проекта
+
+
+        page: Кол-во страниц
+
+
+        perPage: Кол-во объектов на странице
+
+
+        RESPONCE
+
+
+        ``` json
+
+        {
+            "meta": {
+                "total": 12
+            },
+            "withdrawals": [
+                {
+                    "status": "completed",
+                    "currencyCode": "USDT",
+                    "amount": "100",
+                    "accrued": "0",
+                    "walletAddress": "TEmD3AoJ15AUeqaf869TsGThPz1Nw28SJH",
+                    "id": 88,
+                    "createdAt": "2023-11-17T14:39:47.486274Z"
+                }
+            ]
+        }
+
+         ```
+      parameters:
+        - name: onlineStoreId
+          in: query
+          schema:
+            type: integer
+          example: '116'
+        - name: page
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: perPage
+          in: query
+          schema:
+            type: integer
+          example: '1'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:52:58 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '38'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: ae747f38-0e1e-4a4b-a7b9-7f5f3a8c474b
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: ae747f38-0e1e-4a4b-a7b9-7f5f3a8c474b
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=x4hxT9up9NQ4BiK3NSYLUkV3HUAV4zuc9jfiqMYmIelNQxBKS2%2FfN1USoq8Jt41QDBq4Mq4pBh5rE%2FaXA5YyG9FDR1wyTVpG1TzP%2FUCgThkBoEdsvjFmGsWG8%2FlJzlU%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 8290d54a6bf9664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                meta:
+                  total: 0
+                withdrawals: []
+    post:
+      tags:
+        - withdraw
+      summary: CreateWithdrawal
+      description: >-
+        Создание вывода
+
+
+        Требуется наличие активной сессии(пользователь авторизован через логин
+        пароль)
+
+
+        Требуется 1 проект
+
+
+        onlinceStoreId: id проекта
+
+
+        currencyCode: Валюта в которой происходит вывод
+
+
+        blockchainCode: Код сети в которой происходит вывод
+
+
+        paymentAddress: Адрес кошелька на который происходит вывод
+
+
+        idempotencyKey: Уникальный для проекта ключ который необходим для
+        создания вывода
+
+
+        saveWallet: Сохранение кошелька для дальнейших оплат??
+
+
+        ammount: сумма которую хотят вывести
+
+
+        RESPONCE
+
+
+        ``` json
+
+        {
+            "withdrawalId": 88
+        }
+
+         ```
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                onlineStoreId: 93
+                currencyCode: USDT
+                blockchainCode: TRON
+                paymentAddress: TEmD3AoJ15AUeqaf869TsGThPz1Nw28SJH
+                idempotencyKey: '{{$randomLocale}}{{$randomPhoneNumber}}'
+                saveWallet: false
+                amount: 0.05
+      responses:
+        '201':
+          description: Created
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:54:37 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '20'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 62affd64-ecd2-4a5c-817f-38c47b85b8e4
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 62affd64-ecd2-4a5c-817f-38c47b85b8e4
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=yBlzt8FR4Xr2V4%2FxAwTftBnuFNyhLvH19inPrnadOVyEr6v36T2h9hr2gMBZlyUWIR%2BzILQIcP043h8jHg3a6%2B2TftdMQDjG6QYTErn71uScy%2BkgYg1te35VmWWBSx4%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 8290d7b69cb0664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: CreateWithdrawal
+                  value:
+                    withdrawalId: 90
+                example-1:
+                  summary: CreateWithdrawal with save wallet
+                  value:
+                    withdrawalId: 93
+                example-2:
+                  summary: CreateWithdrawal without save wallet
+                  value:
+                    withdrawalId: 94
+                example-3:
+                  summary: CreateWithdrawal with decimal 0.0x
+                  value:
+                    withdrawalId: 96
+        '401':
+          description: Unauthorized
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 13:06:38 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '24'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 60fc7ba2-0733-4c19-b887-5eb6d894bc20
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 60fc7ba2-0733-4c19-b887-5eb6d894bc20
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=voqh2eGZRZACA4qJEkefAEJAtXwEqRTRVzHmUmpAYdoUe6BuxFPTilQw%2FtUDcd1SqP3rsIQCFf9FJy4bwIPPtIrya%2Fq08AcJFGgOPNl9GwaXj2cMD9VuH3z9%2BwW7S3M%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 8290e94bab8e664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: Wrong store
+        '422':
+          description: Unprocessable Entity
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 13:06:11 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '24'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: 404bb7a3-0872-4fb5-9f84-888128f37172
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: 404bb7a3-0872-4fb5-9f84-888128f37172
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=JOmCwQqUTqTDw%2B4RY7EgLOfvIMCtDSpRYdjmiYY79fNgHxvF%2F8mHUNEt43KZRXPhfQMcdMcuQ39ElGzM65MuLhivtgsSl5XSbLlTN9tbA9aqDT0DKqDwfuMxTAB0z64%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 8290e8a6b820664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: CreateWithdrawal with not exist store
+                  value:
+                    error: Wrong store
+                example-1:
+                  summary: CreateWithdrawal with decimal greater 0.0x
+                  value:
+                    error: amount can't have decimal part with > 2 digits
+                example-2:
+                  summary: CreateWithdrawal with not avilable blockchain
+                  value:
+                    error: >-
+                      Selected blockchain is not available for this
+                      store/currency
+                example-3:
+                  summary: CreateWithdrawal with not avilable currency
+                  value:
+                    error: >-
+                      Chosen currency is not in the list of available currencies
+                      for this store
+        '500':
+          description: Internal Server Error
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 12:54:11 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '34'
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Trace-Id:
+              schema:
+                type: string
+                example: d323f556-d098-4b63-966d-fe701428734e
+            Vary:
+              schema:
+                type: string
+                example: Cookie,Origin
+            X-Request-Id:
+              schema:
+                type: string
+                example: d323f556-d098-4b63-966d-fe701428734e
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: DYNAMIC
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=BN4oyq%2BIyiuq0H1lRln9ROGPUW5cIYwBU5DEa49%2FU4Yw%2F8LNFNllNtqe%2F%2ByR07LxmPc4JqxKvLH1uhRxACXjXtXHTiXB1J9cdCMmd941BwG05ttC8kkhszdHN96kVlU%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            CF-RAY:
+              schema:
+                type: string
+                example: 8290d712bb65664f-AMS
+            alt-svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: Internal server error

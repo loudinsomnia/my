@@ -1,0 +1,49 @@
+{
+  "base_url": "url",
+  "mailhog_url": "url",
+  "headers": {
+    "api_header": {
+      "Authorization": "Token",
+      "Content-Type": "application/json"
+    },
+    "header": {
+      "Content-Type": "application/json"
+    }
+  },
+  "methods": {
+    "Users": {
+      "CreateUser": "/users",
+      "GetCurrentUser": "/users/current",
+      "VerifyUser": "/users/verification",
+      "ResetUserVerification": "/users/verification",
+      "RequestResetUserPassword": "/users/password_reset",
+      "ResetUserPassword": "/users/password_reset"
+    },
+    "Sessions": {
+      "CreateSession": "/sessions",
+      "DeleteCurrentSession": "/sessions"
+    },
+    "account": {
+      "GetAccount": "/accounts/"
+    },
+    "invoices": {
+      "CreateInvoice": "/invoices",
+      "GetInvoices": "/invoices",
+      "CreateInvoiceExternal": "/external/invoices",
+      "GetInvoice": "/payments/",
+      "UpdateInvoiceBlockchain": "/payments/"
+    },
+    "online_stores": {
+      "GetOnlineStores": "/online_stores",
+      "GetOnlineStore": "/online_stores/",
+      "CreateOnlineStore": "/online_stores",
+      "UpdateOnlineStore": "/online_stores/",
+      "GenerateApiKey": "/online_stores/",
+      "GenerateCallbackKey": "/online_stores/"
+    },
+    "withdraw": {
+      "GetWithdrawals": "/withdrawals",
+      "CreateWithdrawal": "/withdrawals"
+    }
+  }
+}
