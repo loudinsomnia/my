@@ -8,7 +8,7 @@ import hmac
 
 @api_view(["GET", "POST"])
 def webhooks(request):
-    api_secret = "6c1e5d889a4e0aca9d5cffa4144da414"
+    api_secret = ""
     signature = hmac.new(api_secret.encode('utf-8'),
                          (request.headers['X-Api-Key'] + json.dumps(request.data, separators=(',', ':'))).encode(
                              'utf-8'), hashlib.sha512).hexdigest()
